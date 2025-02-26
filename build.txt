@@ -1,0 +1,3 @@
+displayName = Curse of the Snail
+author = DSquireDev
+version = 0.1
