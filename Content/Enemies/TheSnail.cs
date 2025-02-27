@@ -9,6 +9,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
+using Terraria.DataStructures;
 
 namespace SnailMod.Content.Enemies
 {
@@ -25,14 +26,30 @@ namespace SnailMod.Content.Enemies
             NPC.immortal = true;
             NPC.width = 18;
             NPC.height = 14;
-            NPC.damage = 0;
+            NPC.damage = 1;
             NPC.lifeMax = 5;
             NPC.knockBackResist = 0.5f;
-            NPC.aiStyle = NPCID.Snail;
-            AIType = NPCID.Snail;
+            NPC.aiStyle = -1;
             AnimationType = NPCID.Snail;
 
             //SpawnModBiomes = new int[1] { ModContent.GetInstance<HeavenBiome>().Type };
+        }
+
+        public override void AI()
+        {
+            NPC.active = true;
+            if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
+            {
+                NPC.TargetClosest();
+            }
+
+            Player player = Main.player[NPC.target];
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
+        {
+            target.statLife = 0; // Set player health to zero
+            target.KillMe(PlayerDeathReason.ByCustomReason($"{target.name} was touched by The Snail."), 1, 0);
         }
     }
 }
